@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Layout from "./Layout/Layout";
-import Section from "./Layout/Section";
 import StatisticBtn from "./StatisticBtn";
 import FeedbackValue from "./FeedbackValue";
+import Section from "./Layout/Section";
 
 export default class App extends Component {
   static propTypes = {};
@@ -10,64 +10,59 @@ export default class App extends Component {
   static defaultProps = {};
 
   state = {
-    good: 2,
-    neutral: 3,
-    bad: 1,
-    total: 0,
-    percentage: 0,
+    good: 0,
+    neutral: 0,
+    bad: 0,
   };
 
-  countTotalFeedback = () => {
-    this.setState(
-      (prevState) =>
-        (prevState.total = Object.values(this.state).reduce(
-          (acc, item) => acc + item,
-          0
-        ))
-    );
+  addFeedback = (feedbackType) => {
+    this.setState((prevState) => {
+      return { [feedbackType]: prevState[feedbackType] + 1 };
+    });
   };
 
-  incrementFeedbackValue = (value) => {
-    console.log(value);
-    this.setState((prevState) => prevState[value.toLowerCase()] + 1);
-    console.log(this.state);
-  };
+  countTotalFeedback = () =>
+    Object.values(this.state).reduce((acc, item) => acc + item);
 
   countPositiveFeedbackPercentage = () => {
-    this.setState(
-      (prevState) =>
-        (prevState.percentage = (this.state.good / this.state.total) * 100)
-    );
+    return Math.round((this.state.good / this.countTotalFeedback()) * 100);
   };
 
   handlerIncrement = (event) => {
-    const value = event.currentTarget.textContent;
-    this.incrementFeedbackValue(value);
+    const typeFeedback = event.currentTarget.textContent;
+    this.addFeedback(typeFeedback);
     this.countTotalFeedback();
     this.countPositiveFeedbackPercentage();
   };
 
   render() {
+    const { good, neutral, bad } = this.state;
+
     return (
       <Layout>
         <Section>
-          <h2>"Please leave feedback"</h2>
-          <StatisticBtn label="Good" onIncrement={this.handlerIncrement} />
-          <StatisticBtn label="Neutral" onIncrement={this.handlerIncrement} />
-          <StatisticBtn label="Bad" onIncrement={this.handlerIncrement} />
+          <h2>Please leave feedback</h2>
+          <StatisticBtn label="good" onIncrement={this.handlerIncrement} />
+          <StatisticBtn label="neutral" onIncrement={this.handlerIncrement} />
+          <StatisticBtn label="bad" onIncrement={this.handlerIncrement} />
         </Section>
 
-        <Section>
-          <h2>"Statistics"</h2>
-          <FeedbackValue label={"Good"} value={this.state.good} />
-          <FeedbackValue label={"Neutral"} value={this.state.neutral} />
-          <FeedbackValue label={"Bad"} value={this.state.bad} />
-          <FeedbackValue label={"Total"} value={this.state.total} />
-          <FeedbackValue
-            label={"Positive feedback"}
-            value={this.state.percentage}
-          />
-        </Section>
+        {!!this.countTotalFeedback() ? (
+          <Section>
+            <h2>Statistics:</h2>
+            <FeedbackValue label={"Good"} value={good} />
+            <FeedbackValue label={"Neutral"} value={neutral} />
+            <FeedbackValue label={"Bad"} value={bad} />
+
+            <FeedbackValue label={"Total"} value={this.countTotalFeedback()} />
+            <FeedbackValue
+              label={"Percentage"}
+              value={this.countPositiveFeedbackPercentage() + "%"}
+            />
+          </Section>
+        ) : (
+          <p>No feedback</p>
+        )}
       </Layout>
     );
   }
