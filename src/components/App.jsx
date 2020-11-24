@@ -1,9 +1,9 @@
 import { Component } from "react";
 
 export default class App extends Component {
-  propTypes = {};
+  static propTypes = {};
 
-  defaultProps = {};
+  static defaultProps = {};
 
   state = {
     good: 0,
@@ -11,8 +11,12 @@ export default class App extends Component {
     bad: 0,
   };
 
-  addFeedback(stateType) {
-    this.setState(stateType + 1);
+  leaveFeedback(type) {
+    this.setState((prevState) => {
+      return {
+        [type]: prevState[type] + 1,
+      };
+    });
   }
 
   countTotalFeedback() {
@@ -20,24 +24,30 @@ export default class App extends Component {
   }
 
   countPositiveFeedbackPercentage() {
-    return (this.state.good / this.countTotalFeedback()) * 100;
-  }
-
-  handleClickBtn(e) {
-    const feedbackType = e.currentTarget.textContent;
-    this.addFeedback(feedbackType);
+    return this.countTotalFeedback() > 0
+      ? Math.round((this.state.good / this.countTotalFeedback()) * 100)
+      : 0;
   }
 
   render() {
     const { good, neutral, bad } = this.state;
 
+    const total = this.countTotalFeedback();
+    // const percentage = this.countPositiveFeedbackPercentage();
+
     return (
       <>
         <section>
           <h2>Please leave feedback</h2>
-          <button type="button">Good</button>
-          <button type="button">Neutral</button>
-          <button type="button">Bad</button>
+          <button type="button" onClick={() => this.leaveFeedback("good")}>
+            good
+          </button>
+          <button type="button" onClick={() => this.leaveFeedback("neutral")}>
+            Neutral
+          </button>
+          <button type="button" onClick={() => this.leaveFeedback("bad")}>
+            Bad
+          </button>
         </section>
 
         <section>
@@ -51,10 +61,10 @@ export default class App extends Component {
             bad: <span>{bad}</span>
           </p>
           <p>
-            total: <span>{this.countTotalFeedback()}</span>
+            total: <span>{total}</span>
           </p>
           <p>
-            petcentage: <span>{this.countPositiveFeedbackPercentage()}</span>
+            percentage: <span>{this.countPositiveFeedbackPercentage()}%</span>
           </p>
         </section>
       </>
