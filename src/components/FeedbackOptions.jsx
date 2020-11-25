@@ -1,12 +1,18 @@
-import Button from "./Button";
-import { uuid } from "uuidv4";
+import { v4 as uuidv4 } from "uuid";
+import Section from "./Section";
 
 export default function FeedbackOptions({ options, onLeaveFeedback }) {
   return (
-    <section>
+    <Section title={"Please leave feedback"}>
       {Object.keys(options).map((key) => (
-        <Button name={key} onLeaveFeedback={onLeaveFeedback} key={uuid()} />
+        <button
+          type="button"
+          onClick={() => onLeaveFeedback(key)}
+          key={uuidv4()}
+        >
+          {key}
+        </button>
       ))}
-    </section>
+    </Section>
   );
 }

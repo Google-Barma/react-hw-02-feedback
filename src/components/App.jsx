@@ -1,5 +1,4 @@
 import { Component } from "react";
-import { v4 as uuidv4 } from "uuid";
 
 import Statistics from "./Statistics";
 import FeedbackOptions from "./FeedbackOptions";
@@ -15,46 +14,44 @@ export default class App extends Component {
     bad: 0,
   };
 
-  leaveFeedback(type) {
+  leaveFeedback = (type) => {
     this.setState((prevState) => {
       return {
         [type]: prevState[type] + 1,
       };
     });
-  }
+  };
 
-  countTotalFeedback() {
+  countTotalFeedback = () => {
     return Object.values(this.state).reduce((acc, item) => acc + item, 0);
-  }
+  };
 
-  countPositiveFeedbackPercentage() {
+  countPositiveFeedbackPercentage = () => {
     const total = this.countTotalFeedback();
+
     return total > 0 ? Math.round((this.state.good / total) * 100) : 0;
-  }
+  };
+
+  makeStatisticsList = () => {
+    return Object.entries(this.state);
+  };
 
   render() {
-    const { good, neutral, bad } = this.state;
+    // const { good, neutral, bad } = this.state;
 
     const total = this.countTotalFeedback();
 
     return (
       <>
-        <section>
-          {Object.keys(this.state).map((key) => (
-            <button
-              type="button"
-              onClick={() => this.leaveFeedback(key)}
-              key={uuidv4()}
-            >
-              {key}
-            </button>
-          ))}
-        </section>
-
+        <FeedbackOptions
+          options={this.state}
+          onLeaveFeedback={this.leaveFeedback}
+        />
         <Statistics
-          good={good}
-          neutral={neutral}
-          bad={bad}
+          //   good={good}
+          //   neutral={neutral}
+          //   bad={bad}
+          stats={this.makeStatisticsList()}
           total={total}
           positivePercentage={this.countPositiveFeedbackPercentage()}
         />
