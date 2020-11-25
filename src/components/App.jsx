@@ -1,4 +1,8 @@
 import { Component } from "react";
+import { v4 as uuidv4 } from "uuid";
+
+import Statistics from "./Statistics";
+import FeedbackOptions from "./FeedbackOptions";
 
 export default class App extends Component {
   static propTypes = {};
@@ -24,49 +28,36 @@ export default class App extends Component {
   }
 
   countPositiveFeedbackPercentage() {
-    return this.countTotalFeedback() > 0
-      ? Math.round((this.state.good / this.countTotalFeedback()) * 100)
-      : 0;
+    const total = this.countTotalFeedback();
+    return total > 0 ? Math.round((this.state.good / total) * 100) : 0;
   }
 
   render() {
     const { good, neutral, bad } = this.state;
 
     const total = this.countTotalFeedback();
-    // const percentage = this.countPositiveFeedbackPercentage();
 
     return (
       <>
         <section>
-          <h2>Please leave feedback</h2>
-          <button type="button" onClick={() => this.leaveFeedback("good")}>
-            good
-          </button>
-          <button type="button" onClick={() => this.leaveFeedback("neutral")}>
-            Neutral
-          </button>
-          <button type="button" onClick={() => this.leaveFeedback("bad")}>
-            Bad
-          </button>
+          {Object.keys(this.state).map((key) => (
+            <button
+              type="button"
+              onClick={() => this.leaveFeedback(key)}
+              key={uuidv4()}
+            >
+              {key}
+            </button>
+          ))}
         </section>
 
-        <section>
-          <p>
-            good: <span>{good}</span>
-          </p>
-          <p>
-            neutral: <span>{neutral}</span>
-          </p>
-          <p>
-            bad: <span>{bad}</span>
-          </p>
-          <p>
-            total: <span>{total}</span>
-          </p>
-          <p>
-            percentage: <span>{this.countPositiveFeedbackPercentage()}%</span>
-          </p>
-        </section>
+        <Statistics
+          good={good}
+          neutral={neutral}
+          bad={bad}
+          total={total}
+          positivePercentage={this.countPositiveFeedbackPercentage()}
+        />
       </>
     );
   }
