@@ -37,8 +37,6 @@ export default class App extends Component {
   };
 
   render() {
-    // const { good, neutral, bad } = this.state;
-
     const total = this.countTotalFeedback();
 
     return (
@@ -48,9 +46,6 @@ export default class App extends Component {
           onLeaveFeedback={this.leaveFeedback}
         />
         <Statistics
-          //   good={good}
-          //   neutral={neutral}
-          //   bad={bad}
           stats={this.makeStatisticsList()}
           total={total}
           positivePercentage={this.countPositiveFeedbackPercentage()}
