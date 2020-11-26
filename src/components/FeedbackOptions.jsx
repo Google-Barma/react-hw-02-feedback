@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from "uuid";
 import Section from "./Section";
+import propTypes from "prop-types";
 
 export default function FeedbackOptions({ options, onLeaveFeedback }) {
   return (
@@ -16,3 +17,8 @@ export default function FeedbackOptions({ options, onLeaveFeedback }) {
     </Section>
   );
 }
+
+FeedbackOptions.propTypes = {
+  options: propTypes.object.isRequired,
+  onLeaveFeedback: propTypes.func.isRequired,
+};

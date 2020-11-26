@@ -1,6 +1,7 @@
 import { v4 as uuid } from "uuid";
 import Section from "./Section";
 import Notification from "./Notification";
+import propTypes from "prop-types";
 
 export default function Statistics({ stats, total, positivePercentage }) {
   return (
@@ -23,3 +24,9 @@ export default function Statistics({ stats, total, positivePercentage }) {
     </Section>
   );
 }
+
+Statistics.propTypes = {
+  stats: propTypes.arrayOf(propTypes.array),
+  total: propTypes.number.isRequired,
+  positivePersentage: propTypes.number,
+};
